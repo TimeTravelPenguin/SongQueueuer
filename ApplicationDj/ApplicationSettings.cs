@@ -7,7 +7,7 @@
 // File Name: ApplicationSettings.cs
 // 
 // Current Data:
-// 2021-07-18 7:18 PM
+// 2021-07-18 8:30 PM
 // 
 // Creation Date:
 // 2021-07-18 4:16 PM
@@ -17,7 +17,6 @@
 #region usings
 
 using System;
-using System.Reflection;
 
 #endregion
 
@@ -27,7 +26,6 @@ namespace ApplicationDj
   {
     public const string DbCount = "count";
 
-    public static readonly string EntryAssemblyLocation = Assembly.GetEntryAssembly()?.Location ??
-                                                          throw new NullReferenceException("Entry assembly is null");
+    public static readonly string EntryAssemblyLocation = AppContext.BaseDirectory;
   }
 }
