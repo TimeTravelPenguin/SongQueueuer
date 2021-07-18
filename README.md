@@ -8,3 +8,5 @@ How to use:
 3. Fill in songs.json
 4. Add vlc to system path
 5. Run SongQueuer.exe to queue a random song from the .json file
+
+Designed for [Tomshi](https://twitch.tv/Tomshi).
