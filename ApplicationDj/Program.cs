@@ -2,12 +2,12 @@
 
 // Name: Phillip Smith
 // 
-// Solution: TomSongQueueue
+// Solution: SongQueueue
 // Project: ApplicationDj
 // File Name: Program.cs
 // 
 // Current Data:
-// 2021-07-18 4:44 PM
+// 2021-07-18 7:21 PM
 // 
 // Creation Date:
 // 2021-07-18 11:40 AM
@@ -55,7 +55,7 @@ namespace ApplicationDj
 
     private static void CheckSongPaths()
     {
-      var file = Path.Combine(Environment.CurrentDirectory, "songs.json");
+      var file = Path.Combine(ApplicationSettings.EntryAssemblyLocation, "songs.json");
       var fileExists = File.Exists(file);
 
       if (!fileExists)
@@ -63,7 +63,8 @@ namespace ApplicationDj
         Console.WriteLine("Please add songs to 'songs.json'.");
 
         var data = JsonConvert.SerializeObject(
-          new SongList {Songs = new List<string> {@"path\\to\\song1", @"path\\to\\song2", "..."}}, Formatting.Indented);
+          new SongList {Songs = new List<string> {@"path\\to\\song1.wav", @"path\\to\\song2.mp3", "..."}},
+          Formatting.Indented);
         File.WriteAllText(file, data);
 
         Console.WriteLine("Press any key to exit...");
@@ -120,11 +121,11 @@ namespace ApplicationDj
       Console.WriteLine("Successfully connected to redis");
       _db = _redis.GetDatabase();
 
-      var count = _db.StringGet(Constants.DbCount);
+      var count = _db.StringGet(ApplicationSettings.DbCount);
 
       if (count == RedisValue.Null)
       {
-        _db.StringAppend(new RedisKey(Constants.DbCount), 0);
+        _db.StringAppend(new RedisKey(ApplicationSettings.DbCount), 0);
       }
       else
       {
@@ -147,7 +148,7 @@ namespace ApplicationDj
             return;
           case "y":
           {
-            _db.StringSet(Constants.DbCount, "0");
+            _db.StringSet(ApplicationSettings.DbCount, "0");
             Console.WriteLine("Cleared song queue.");
             return;
           }

@@ -2,12 +2,12 @@
 
 // Name: Phillip Smith
 // 
-// Solution: TomSongQueueue
+// Solution: SongQueueue
 // Project: ApplicationDj
 // File Name: Worker.cs
 // 
 // Current Data:
-// 2021-07-18 4:44 PM
+// 2021-07-18 7:21 PM
 // 
 // Creation Date:
 // 2021-07-18 3:41 PM
@@ -36,9 +36,8 @@ namespace ApplicationDj
     private readonly SongList _songs;
     private readonly ISubscriber _subscriber;
 
-    public Worker(IHostApplicationLifetime applicationLifetime, ISubscriber subscriber, IDatabase db,
-      SongList songs) : base(
-      applicationLifetime)
+    public Worker(IHostApplicationLifetime applicationLifetime, ISubscriber subscriber,
+      IDatabase db, SongList songs) : base(applicationLifetime)
     {
       _subscriber = subscriber;
       _db = db;
@@ -54,7 +53,7 @@ namespace ApplicationDj
 
     private async Task PlaySong(ChannelMessage obj)
     {
-      _db.StringGet(Constants.DbCount).TryParse(out int currentCount);
+      _db.StringGet(ApplicationSettings.DbCount).TryParse(out int currentCount);
       while (currentCount > 0)
       {
         var song = _songs[Random.Next(_songs.Songs.Count)];
@@ -62,13 +61,13 @@ namespace ApplicationDj
 
         var args = $"--play-and-exit --qt-start-minimized \"{song}\"";
 
-        _db.StringDecrement(Constants.DbCount);
+        _db.StringDecrement(ApplicationSettings.DbCount);
         --currentCount;
-        await Process.ExecuteAndWaitAsync(Environment.CurrentDirectory, "vlc.exe", args, -1);
+        await Process.ExecuteAndWaitAsync(ApplicationSettings.EntryAssemblyLocation, "vlc.exe", args, -1);
 
         if (currentCount <= 0)
         {
-          _db.StringGet(Constants.DbCount).TryParse(out currentCount);
+          _db.StringGet(ApplicationSettings.DbCount).TryParse(out currentCount);
         }
       }
     }
